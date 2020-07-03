@@ -222,12 +222,27 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
     });
   };
 
+  const retryCount = scenario.retries || 0;
   let error;
-  await puppetCommands().catch(e => {
+  try {
+    await puppetCommands();
+  } catch (e) {
     console.log(chalk.red(`Puppeteer encountered an error while running scenario "${scenario.label}"`));
     console.log(chalk.red(e));
     error = e;
-  });
+    if (retryCount > 0) {
+      let retry = 0;
+      while(retry++ < retryCount) {
+        try {
+          await puppetCommands();
+        } catch (e) {
+          console.log(chalk.red(`Puppeteer encountered an error while running scenario "${scenario.label}" on retry ${retry}`));
+          console.log(chalk.red(e));
+          error = e;
+        }
+      }
+    }
+  }
 
   let compareConfig;
   if (!error) {
