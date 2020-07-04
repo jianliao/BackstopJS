@@ -19,7 +19,7 @@ describe('runDocker', function () {
       spawn: function (dockerCommand) {
         assert.strictEqual(
           dockerCommand,
-          'docker run --rm -it --mount type=bind,source="/path/mock",target=/src backstopjs/backstopjs:version.mock test' +
+          'docker run --rm -it --mount type=bind,source="/path/mock",target=/src jianliao/backstopjs-spectrum:version.mock test' +
           ' "--moby=true" "--config=my_config.json" "--filter=my_filter"');
         done();
         return { on: () => {} };

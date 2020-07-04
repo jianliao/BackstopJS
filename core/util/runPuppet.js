@@ -232,7 +232,7 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
     error = e;
     if (retryCount > 0) {
       let retry = 0;
-      while(retry++ < retryCount) {
+      while (retry++ < retryCount) {
         try {
           await puppetCommands();
         } catch (e) {

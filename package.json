@@ -1,5 +1,5 @@
 {
-  "name": "backstopjs",
+  "name": "backstopjs-spectrum",
   "version": "5.0.2",
   "description": "BackstopJS: Catch CSS curveballs.",
   "bin": {
