@@ -234,7 +234,10 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
       let retry = 0;
       while (retry++ < retryCount) {
         try {
+          console.log(chalk.yellow(`Re-running scenario "${scenario.label}" on ${retry} time`));
           await puppetCommands();
+          error = undefined; // clear out the previously error if retry succeeded
+          break; // break out of the while loop
         } catch (e) {
           console.log(chalk.red(`Puppeteer encountered an error while running scenario "${scenario.label}" on retry ${retry}`));
           console.log(chalk.red(e));
