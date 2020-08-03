@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "backstopjs-spectrum",
   "version": "5.0.4",
+=======
+  "name": "backstopjs",
+  "version": "5.0.2",
+>>>>>>> f2e3696ed30afcb5b1ab7d6a0bf5b73f4fadce00
   "description": "BackstopJS: Catch CSS curveballs.",
   "bin": {
     "backstop": "./cli/index.js"
