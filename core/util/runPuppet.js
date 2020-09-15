@@ -192,6 +192,29 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
       await hideSelectors();
     }
 
+    // --- HANDLE Force-Pseudo-State ---
+    if (scenario.hasOwnProperty('pseudoStates')) {
+      const cdp = await page.target().createCDPSession();
+      const documentRootNodeId = (await cdp.send('DOM.getDocument')).root.nodeId; // Get parent element
+      for (const pseudoState of scenario.pseudoStates) {
+        for (const selector of pseudoState.selectors) {
+          const nodeIds = (await cdp.send('DOM.querySelectorAll', {
+            nodeId: documentRootNodeId,
+            selector
+          })).nodeIds; // Get all the element ids
+          await cdp.send('CSS.enable');
+          for (const nodeId of nodeIds) {
+            await cdp.send('CSS.forcePseudoState', {
+              nodeId,
+              forcedPseudoClasses: pseudoState.states // assume pseudoStates is array 
+            });
+          }
+        }
+      }
+      // Can't detach before capturing the screenshot, all setting will gone.
+      // cdp.detach();
+    }
+
     // --- HANDLE NO-SELECTORS ---
     if (!scenario.hasOwnProperty('selectors') || !scenario.selectors.length) {
       scenario.selectors = [DOCUMENT_SELECTOR];
@@ -236,6 +259,7 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
         try {
           console.log(chalk.yellow(`Re-running scenario "${scenario.label}" on ${retry} time`));
           await puppetCommands();
+          console.log(chalk.yellow(`Re-running scenario "${scenario.label}" successfully on ${retry} time`));
           error = undefined; // clear out the previously error if retry succeeded
           break; // break out of the while loop
         } catch (e) {
