@@ -206,7 +206,7 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
           for (const nodeId of nodeIds) {
             await cdp.send('CSS.forcePseudoState', {
               nodeId,
-              forcedPseudoClasses: pseudoState.states // assume pseudoStates is array 
+              forcedPseudoClasses: pseudoState.states // assume pseudoStates is array
             });
           }
         }
