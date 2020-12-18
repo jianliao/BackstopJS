@@ -132,6 +132,11 @@ export default class ImageScrubber extends React.Component {
       return /remote/.test(location.search);
     }
 
+    // only show the static diverged option if the report comes with static diverged diff image
+    function showStaticDivergedOption () {
+      return !!divergedDiffImage;
+    }
+
     // TODO: halp. i don't haz context.
     const that = this;
 
@@ -246,6 +251,9 @@ export default class ImageScrubber extends React.Component {
                   scrubberModalMode === 'SHOW_SCRUBBER_STATIC_DIVERGED_IMAGE'
                 }
                 onClick={showScrubberStaticDivergedImage}
+                style={{
+                  display: showStaticDivergedOption() ? '' : 'none'
+                }}
               >
                 STATIC DIVERGED
               </ScrubberViewBtn>
