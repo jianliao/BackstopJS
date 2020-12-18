@@ -20,7 +20,7 @@ function compare (data) {
     .catch(function (data) {
       pair.diff = data;
       pair.status = 'fail';
-      if (resembleOutputSettings.diverged === true) {
+      if (resembleOutputSettings && resembleOutputSettings.diverged === true) {
         pair.divergedDiffImage = compareDiverged(referencePath, testPath);
       }
       return storeFailedDiff(testPath, data).then(function (compare) {
