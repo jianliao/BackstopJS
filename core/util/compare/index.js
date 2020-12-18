@@ -74,6 +74,9 @@ function compareImages (referencePath, testPath, pair, resembleOutputSettings, T
 
       if (data.status === 'fail') {
         pair.diffImage = data.diffImage;
+        if (resembleOutputSettings.diverged === true) {
+          pair.divergedDiffImage = data.divergedDiffImage;
+        }
         logger.error('ERROR { requireSameDimensions: ' + (data.requireSameDimensions ? 'true' : 'false') + ', size: ' + (data.isSameDimensions ? 'ok' : 'isDifferent') + ', content: ' + data.diff.misMatchPercentage + '%, threshold: ' + pair.misMatchThreshold + '% }: ' + pair.label + ' ' + pair.fileName);
       } else {
         logger.success('OK: ' + pair.label + ' ' + pair.fileName);

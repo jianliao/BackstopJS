@@ -2,11 +2,6 @@
   "id": "responsiveDemoPage",
   "viewports": [
     {
-      "label": "phone",
-      "width": 320,
-      "height": 480
-    },
-    {
       "label": "tablet",
       "width": 1024,
       "height": 768
@@ -16,8 +11,8 @@
   "onReadyScript": "puppet/onReady.js",
   "scenarios": [
     {
-      "label": "comparePage",
-      "url": "../../examples/responsiveDemo/index.html",
+      "label": "Button",
+      "url": "http://localhost:3000/docs/button-vrt.html",
       "referenceUrl": "",
       "readyEvent": "",
       "readySelector": "",
@@ -27,7 +22,16 @@
       "hoverSelector": "",
       "clickSelector": "",
       "postInteractionWait": 0,
-      "selectors": [],
+      "pseudoStates": [
+        {
+          "selectors": [".hover"], 
+          "states": ["hover"]
+        },
+        {
+          "selectors": [".active"], 
+          "states": ["active"]
+        }
+      ],
       "selectorExpansion": true,
       "expect": 0,
       "misMatchThreshold" : 0.1,
@@ -49,8 +53,5 @@
   "asyncCaptureLimit": 5,
   "asyncCompareLimit": 50,
   "debug": false,
-  "debugWindow": false,
-  "resembleOutputOptions": {
-    "diverged": true
-  }
+  "debugWindow": false
 }

@@ -75,6 +75,13 @@ export const showScrubberDivergedImage = value => {
   };
 };
 
+export const showScrubberStaticDivergedImage = value => {
+  return {
+    type: 'SHOW_SCRUBBER_STATIC_DIVERGED_IMAGE',
+    value
+  };
+};
+
 export const showScrubber = value => {
   return {
     type: 'SHOW_SCRUBBER',

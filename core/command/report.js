@@ -50,6 +50,9 @@ function writeBrowserReport (config, reporter) {
 
         if (pair.diffImage) {
           pair.diffImage = path.relative(report, toAbsolute(pair.diffImage));
+          if (config.resembleOutputOptions && config.resembleOutputOptions.diverged === true) {
+            pair.divergedDiffImage = path.relative(report, toAbsolute(pair.divergedDiffImage));
+          }
         }
       }
     }
@@ -155,6 +158,9 @@ function writeJsonReport (config, reporter) {
 
         if (pair.diffImage) {
           pair.diffImage = path.relative(report, toAbsolute(pair.diffImage));
+          if (config.resembleOutputOptions && config.resembleOutputOptions.diverged === true) {
+            pair.divergedDiffImage = path.relative(report, toAbsolute(pair.divergedDiffImage));
+          }
         }
       }
     }

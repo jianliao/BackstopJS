@@ -63,7 +63,7 @@
     "lint-staged": "^4.3.0",
     "mocha": "^8.0.1",
     "mockery": "^1.4.0",
-    "pngjs": "^5.0.0",
+    "pngjs": "^6.0.0",
     "prettier": "^1.14.3",
     "prettier-eslint-cli": "^5.0.0",
     "react": "^15.6.1",

@@ -8,6 +8,7 @@ import {
   showScrubberRefImage,
   showScrubberDiffImage,
   showScrubberDivergedImage,
+  showScrubberStaticDivergedImage,
   showScrubber
 } from '../../actions';
 
@@ -63,12 +64,13 @@ const customStyles = {
 };
 
 class ScrubberModal extends React.Component {
-  render () {
+  render() {
     const {
       reference: refImage,
       test: testImage,
       diffImage,
-      divergedImage
+      divergedImage,
+      divergedDiffImage
     } = this.props.scrubber.test;
     const {
       visible,
@@ -82,6 +84,7 @@ class ScrubberModal extends React.Component {
       showScrubberRefImage,
       showScrubberDiffImage,
       showScrubberDivergedImage,
+      showScrubberStaticDivergedImage,
       showScrubber
     } = this.props;
 
@@ -105,11 +108,13 @@ class ScrubberModal extends React.Component {
             refImage={refImage}
             diffImage={diffImage}
             divergedImage={divergedImage}
+            divergedDiffImage={divergedDiffImage}
             position={position}
             showScrubberTestImage={showScrubberTestImage}
             showScrubberRefImage={showScrubberRefImage}
             showScrubberDiffImage={showScrubberDiffImage}
             showScrubberDivergedImage={showScrubberDivergedImage}
+            showScrubberStaticDivergedImage={showScrubberStaticDivergedImage}
             showScrubber={showScrubber}
           />
         </Modal>
@@ -141,14 +146,18 @@ const mapDispatchToProps = dispatch => {
     showScrubberDivergedImage: val => {
       dispatch(showScrubberDivergedImage(val));
     },
+    showScrubberStaticDivergedImage: val => {
+      dispatch(showScrubberStaticDivergedImage(val));
+    },
     showScrubber: val => {
       dispatch(showScrubber(val));
     }
   };
 };
 
-const ScrubberModalContainer = connect(mapStateToProps, mapDispatchToProps)(
-  ScrubberModal
-);
+const ScrubberModalContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ScrubberModal);
 
 export default ScrubberModalContainer;

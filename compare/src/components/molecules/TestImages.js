@@ -12,7 +12,7 @@ const ImagesWrapper = styled.div`
 `;
 
 class TestImages extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -20,13 +20,13 @@ class TestImages extends React.Component {
     };
   }
 
-  onImageClick (img) {
+  onImageClick(img) {
     let { openModal } = this.props;
     this.props.info.targetImg = img;
     openModal(this.props.info);
   }
 
-  render () {
+  render() {
     let { reference, test } = this.props.info;
     let { status, settings } = this.props;
 
@@ -52,6 +52,15 @@ class TestImages extends React.Component {
         src: this.props.info.diffImage,
         visible: settings.diffImage
       });
+
+      if (this.props.info.divergedDiffImage) {
+        this.state.images.push({
+          id: 'diffDivergedImage',
+          label: 'Diverged',
+          src: this.props.info.divergedDiffImage,
+          visible: settings.diffImage
+        });
+      }
     }
 
     return (
@@ -85,8 +94,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-const TestImagesContainer = connect(mapStateToProps, mapDispatchToProps)(
-  TestImages
-);
+const TestImagesContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TestImages);
 
 export default TestImagesContainer;
