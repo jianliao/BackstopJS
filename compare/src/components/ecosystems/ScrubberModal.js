@@ -64,7 +64,7 @@ const customStyles = {
 };
 
 class ScrubberModal extends React.Component {
-  render() {
+  render () {
     const {
       reference: refImage,
       test: testImage,

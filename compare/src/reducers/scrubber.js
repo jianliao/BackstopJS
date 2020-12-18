@@ -1,4 +1,4 @@
-function getPosFromImgId(imgId) {
+function getPosFromImgId (imgId) {
   switch (imgId) {
     case 'refImage':
       return 100; // just passed the right border
@@ -11,7 +11,7 @@ function getPosFromImgId(imgId) {
   }
 }
 
-function getModeFromImgId(imgId) {
+function getModeFromImgId (imgId) {
   switch (imgId) {
     case 'refImage':
       return 'SHOW_SCRUBBER_REF_IMAGE';

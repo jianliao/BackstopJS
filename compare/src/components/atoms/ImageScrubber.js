@@ -81,7 +81,7 @@ const SliderBar = styled.div`
 `;
 
 export default class ImageScrubber extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       isRefImageMissing: false,
@@ -94,19 +94,19 @@ export default class ImageScrubber extends React.Component {
     this.loadingDiverge = this.loadingDiverge.bind(this);
   }
 
-  handleRefImageLoadingError() {
+  handleRefImageLoadingError () {
     this.setState({
       isRefImageMissing: true
     });
   }
 
-  loadingDiverge(torf) {
+  loadingDiverge (torf) {
     this.setState({
       isLoading: !!torf
     });
   }
 
-  render() {
+  render () {
     const {
       scrubberModalMode,
       testImageType,
@@ -128,14 +128,14 @@ export default class ImageScrubber extends React.Component {
     const hasDiff = diffImage && diffImage.length > 0;
 
     // only show the diverged option if the report comes from web server
-    function showDivergedOption() {
+    function showDivergedOption () {
       return /remote/.test(location.search);
     }
 
     // TODO: halp. i don't haz context.
     const that = this;
 
-    function divergedWorker() {
+    function divergedWorker () {
       if (that.state.isLoading) {
         console.error('Diverged process is already running. Please hang on.');
         return;
@@ -158,7 +158,7 @@ export default class ImageScrubber extends React.Component {
 
       worker.addEventListener(
         'message',
-        function(result) {
+        function (result) {
           const divergedImgData = result.data;
           let clampedImgData = getEmptyImgData(h, w);
           for (let i = divergedImgData.length - 1; i >= 0; i--) {
@@ -176,7 +176,7 @@ export default class ImageScrubber extends React.Component {
         false
       );
 
-      worker.addEventListener('error', function(error) {
+      worker.addEventListener('error', function (error) {
         showScrubberDivergedImage('');
         that.loadingDiverge(false);
         console.error(error);
@@ -321,17 +321,17 @@ export default class ImageScrubber extends React.Component {
 /**
  * ========= DIVERGED HELPERS ========
  */
-function getImgDataDataFromContext(context) {
+function getImgDataDataFromContext (context) {
   return context.getImageData(0, 0, context.canvas.width, context.canvas.height)
     .data;
 }
 
-function getEmptyImgData(h, w) {
+function getEmptyImgData (h, w) {
   var o = imageToCanvasContext(null, h, w);
   return o.createImageData(w, h);
 }
 
-function imageToCanvasContext(_img, h, w) {
+function imageToCanvasContext (_img, h, w) {
   let img = _img;
   if (!_img) {
     img = { height: h, width: w };
