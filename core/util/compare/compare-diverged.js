@@ -1,7 +1,7 @@
 const PNG = require('pngjs').PNG;
 const fs = require('fs');
 const path = require('path');
-const diverged = require('diverged');
+const diverged = require('../../../compare/output/diverged');
 
 function getFailedDiffFilename (testPath) {
   return `${path.dirname(testPath) + path.sep}failed_diverged_diff_${path.basename(testPath)}`;

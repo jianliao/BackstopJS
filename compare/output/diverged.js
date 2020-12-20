@@ -3,10 +3,10 @@ const noop = function (){};
 let LCS_DIFF_ARRAY_METHOD = undefined;
 // debugger
 if (typeof require !== 'undefined') {
-    LCS_DIFF_ARRAY_METHOD = require('diff').diffArrays;
+    LCS_DIFF_ARRAY_METHOD = require('./pixel');
 } else {
     try {
-        LCS_DIFF_ARRAY_METHOD = JsDiff.diffArrays;
+        LCS_DIFF_ARRAY_METHOD = diffPixelArray;
     } catch(err) {
         console.error(err);
     }
