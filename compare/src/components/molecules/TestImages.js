@@ -55,7 +55,7 @@ class TestImages extends React.Component {
 
       if (this.props.info.divergedDiffImage) {
         this.state.images.push({
-          id: 'diffDivergedImage',
+          id: 'divergedDiffImage',
           label: 'Diverged',
           src: this.props.info.divergedDiffImage,
           visible: settings.diffImage

@@ -1,7 +1,8 @@
 'use strict';
 
 const diffPixelArray = (oldPixelArr, newPixelArr) => {
-  const M = newPixelArr.length, N = oldPixelArr.length;
+  const M = newPixelArr.length;
+  const N = oldPixelArr.length;
   const MAX = M + N;
   const V = [];
   V[0] = { x: -1, editHistory: [] }; // Greedy path candidates

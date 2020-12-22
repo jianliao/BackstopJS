@@ -19,6 +19,8 @@ function getModeFromImgId (imgId) {
       return 'SHOW_SCRUBBER_TEST_IMAGE';
     case 'diffImage':
       return 'SHOW_SCRUBBER_DIFF_IMAGE';
+    case 'divergedDiffImage':
+      return 'SHOW_SCRUBBER_STATIC_DIVERGED_IMAGE';
     default:
       return 'SCRUB';
   }
