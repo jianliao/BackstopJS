@@ -15,9 +15,9 @@ if (typeof require !== 'undefined') {
 const rowSpread = 1;
 
 const spread = 50; // range of adjacent pixels to aggregate when calculating diff
-const IS_ADDED_WORD = '0_255_0_255';
-const IS_REMOVED_WORD = '255_0_0_255';
-const IS_ADDED_AND_REMOVED_WORD = '0_255_255_255';
+const IS_ADDED_WORD = '0_255_0_255'; // Green
+const IS_REMOVED_WORD = '255_0_0_255'; // Red
+const IS_ADDED_AND_REMOVED_WORD = '0_255_255_255'; // Light blue
 const IS_SAME_WORD = '';
 const OPACITY = '40'; // 0-255 range
 

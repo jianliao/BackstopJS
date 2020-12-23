@@ -5,6 +5,14 @@ function getFailedDiffFilename (testPath) {
   return `${path.dirname(testPath) + path.sep}failed_magick_diff_${path.basename(testPath)}`;
 }
 
+/*
+  https://stackoverflow.com/a/33673440/2695637
+  Convert both file1.png and file2.png to grayscale. Then trat the first as the red channel of the resulting image, the second as the green channel. The blue channel is formed from these two using the darken compose operator, which essentially means taking the minimum.
+
+  So things which are white in both images stay white. Things which are black in both images stay black. Things which are white in the first image but black in the second turn red, and things which are white in the second but black in the first turn green.
+
+  The result gives you a nicely color-coded image where you can easily associate green with the first input and red with the second.
+*/
 function getGenereateDiffShellCommand (reference, test, diff) {
   return `magick convert '(' ${reference} -flatten -grayscale Rec709Luminance ')' \
           '(' ${test} -flatten -grayscale Rec709Luminance ')' \
