@@ -54,17 +54,21 @@ function comparePair (pair, report, config, compareConfig) {
   }
 
   var resembleOutputSettings = config.resembleOutputOptions;
-  return compareImages(referencePath, testPath, pair, resembleOutputSettings, Test);
+  const staticDiverged = config.staticDiverged;
+  const imageMagick = config.imageMagick;
+  return compareImages(referencePath, testPath, pair, imageMagick, resembleOutputSettings, staticDiverged, Test);
 }
 
-function compareImages (referencePath, testPath, pair, resembleOutputSettings, Test) {
+function compareImages (referencePath, testPath, pair, imageMagick = false, resembleOutputSettings, staticDiverged = false, Test) {
   return new Promise(function (resolve, reject) {
     var worker = cp.fork(require.resolve('./compare'));
     worker.send({
-      referencePath: referencePath,
-      testPath: testPath,
-      resembleOutputSettings: resembleOutputSettings,
-      pair: pair
+      referencePath,
+      testPath,
+      pair,
+      imageMagick,
+      resembleOutputSettings,
+      staticDiverged
     });
 
     worker.on('message', function (data) {
@@ -74,7 +78,7 @@ function compareImages (referencePath, testPath, pair, resembleOutputSettings, T
 
       if (data.status === 'fail') {
         pair.diffImage = data.diffImage;
-        if (resembleOutputSettings && resembleOutputSettings.diverged === true) {
+        if (staticDiverged) {
           pair.divergedDiffImage = data.divergedDiffImage;
         }
         logger.error('ERROR { requireSameDimensions: ' + (data.requireSameDimensions ? 'true' : 'false') + ', size: ' + (data.isSameDimensions ? 'ok' : 'isDifferent') + ', content: ' + data.diff.misMatchPercentage + '%, threshold: ' + pair.misMatchThreshold + '% }: ' + pair.label + ' ' + pair.fileName);

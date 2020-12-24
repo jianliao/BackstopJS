@@ -6,50 +6,44 @@ const storeFailedDiff = require('./store-failed-diff.js');
 
 process.on('message', compare);
 
-function compare (data) {
-  const { referencePath, testPath, resembleOutputSettings, pair } = data;
+async function compare (data) {
+  const { referencePath, testPath, pair, imageMagick, resembleOutputSettings, staticDiverged } = data;
 
-  const isStaticDiverged = !!resembleOutputSettings && !!(resembleOutputSettings.diverged);
-  const isMagick = !!resembleOutputSettings && !!(resembleOutputSettings.magick);
+  let testResult;
 
-  if (isMagick) {
-    magickCompareRMSE(referencePath, testPath, pair.misMatchThreshold)
-      .then(data => {
-        pair.diff = data;
-        pair.status = 'pass';
-        return sendMessage(pair);
-      })
-      .catch(data => {
-        pair.diff = data;
-        pair.diffImage = magickCompare(referencePath, testPath);
-        pair.status = 'fail';
-        if (isStaticDiverged) {
-          pair.divergedDiffImage = compareDiverged(referencePath, testPath);
-        }
-        return sendMessage(pair);
-      });
+  if (imageMagick) {
+    try {
+      testResult = await magickCompareRMSE(referencePath, testPath, pair.misMatchThreshold);
+      pair.diff = testResult;
+      pair.status = 'pass';
+    } catch (result) {
+      pair.diff = result;
+      pair.diffImage = magickCompare(referencePath, testPath);
+      pair.status = 'fail';
+      if (staticDiverged) {
+        pair.divergedDiffImage = compareDiverged(referencePath, testPath);
+      }
+    }
   } else {
-    const promise = compareHashes(referencePath, testPath)
-      .catch(() => compareResemble(referencePath, testPath, pair.misMatchThreshold, resembleOutputSettings, pair.requireSameDimensions));
-
-    promise
-      .then(function (data) {
-        pair.diff = data;
-        pair.status = 'pass';
-        return sendMessage(pair);
-      })
-      .catch(function (data) {
-        pair.diff = data;
+    try {
+      testResule = await compareHashes(referencePath, testPath);
+      pair.diff = testResult;
+      pair.status = 'pass';
+    } catch {
+      try {
+        testResule = await compareResemble(referencePath, testPath, pair.misMatchThreshold, resembleOutputSettings, pair.requireSameDimensions);
+      } catch (result) {
+        pair.diff = result;
         pair.status = 'fail';
-        if (isStaticDiverged) {
+        if (staticDiverged) {
           pair.divergedDiffImage = compareDiverged(referencePath, testPath);
         }
-        return storeFailedDiff(testPath, data).then(function (compare) {
-          pair.diffImage = compare;
-          return sendMessage(pair);
-        });
-      });
+        const diffImage = await storeFailedDiff(testPath, data);
+        pair.diffImage = diffImage;
+      }
+    }
   }
+  sendMessage(pair);
 }
 
 function sendMessage (data) {

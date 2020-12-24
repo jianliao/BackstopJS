@@ -19,6 +19,8 @@ function extendConfig (config, userConfig) {
   config.report = userConfig.report || ['browser'];
   config.defaultMisMatchThreshold = 0.1;
   config.debug = userConfig.debug || false;
+  config.imageMagick = userConfig.imageMagick;
+  config.staticDiverged = userConfig.staticDiverged;
   config.resembleOutputOptions = userConfig.resembleOutputOptions;
   config.asyncCompareLimit = userConfig.asyncCompareLimit;
   config.backstopVersion = version;

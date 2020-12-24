@@ -50,8 +50,9 @@
   "debug": false,
   "debugWindow": false,
   "misMatchThreshold" : 0.2,
+  "imageMagick": true,
+  "staticDiverged": true,
   "resembleOutputOptions": {
-    "magick": true,
-    "diverged": true
+    "errorType": "movement"
   }
 }

@@ -50,8 +50,8 @@
   "asyncCompareLimit": 50,
   "debug": false,
   "debugWindow": false,
+  "staticDiverged": true,
   "resembleOutputOptions": {
-    "diverged": true,
     "errorType": "movement"
   }
 }
