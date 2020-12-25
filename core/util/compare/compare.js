@@ -9,15 +9,12 @@ process.on('message', compare);
 async function compare (data) {
   const { referencePath, testPath, pair, imageMagick, resembleOutputSettings, staticDiverged } = data;
 
-  let testResult;
-
   try {
     if (imageMagick) {
-      testResult = await magickCompareRMSE(referencePath, testPath, pair.misMatchThreshold);
+      pair.diff = await magickCompareRMSE(referencePath, testPath, pair.misMatchThreshold);
     } else {
-      testResule = await compareHashes(referencePath, testPath);
+      pair.diff = await compareHashes(referencePath, testPath);
     }
-    pair.diff = testResult;
     pair.status = 'pass';
   } catch (result) {
     if (imageMagick) {
@@ -26,13 +23,12 @@ async function compare (data) {
       pair.diffImage = magickCompare(referencePath, testPath);
     } else {
       try {
-        testResule = await compareResemble(referencePath, testPath, pair.misMatchThreshold, resembleOutputSettings, pair.requireSameDimensions);
-        pair.diff = testResule;
+        pair.diff = await compareResemble(referencePath, testPath, pair.misMatchThreshold, resembleOutputSettings, pair.requireSameDimensions);
         pair.status = 'pass';
-      } catch (result) {
-        pair.diff = result;
+      } catch (result2) {
+        pair.diff = result2;
         pair.status = 'fail';
-        pair.diffImage = await storeFailedDiff(testPath, result);
+        pair.diffImage = await storeFailedDiff(testPath, result2);
       }
     }
   }
