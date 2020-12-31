@@ -26,6 +26,7 @@ module.exports = function (args) {
   const scenario = args.scenario;
   const viewport = args.viewport;
   const config = args.config;
+  const browser = args.browser;
   const scenarioLabelSafe = engineTools.makeSafe(scenario.label);
   const variantOrScenarioLabelSafe = scenario._parent ? engineTools.makeSafe(scenario._parent.label) : scenarioLabelSafe;
 
@@ -35,10 +36,10 @@ module.exports = function (args) {
   config._outputFileFormatSuffix = '.' + ((config.outputFormat && config.outputFormat.match(/jpg|jpeg/)) || 'png');
   config._configId = config.id || engineTools.genHash(config.backstopConfigFileName);
 
-  return processScenarioView(scenario, variantOrScenarioLabelSafe, scenarioLabelSafe, viewport, config);
+  return processScenarioView(scenario, variantOrScenarioLabelSafe, scenarioLabelSafe, viewport, config, browser);
 };
 
-async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenarioLabelSafe, viewport, config) {
+async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenarioLabelSafe, viewport, config, browser) {
   if (!config.paths) {
     config.paths = {};
   }
@@ -53,16 +54,21 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
   const VP_W = viewport.width || viewport.viewport.width;
   const VP_H = viewport.height || viewport.viewport.height;
 
-  const puppeteerArgs = Object.assign(
-    {},
-    {
-      ignoreHTTPSErrors: true,
-      headless: !config.debugWindow
-    },
-    config.engineOptions
-  );
+  const singleBrowserInstance = config.engineOptions && config.engineOptions.singleBrowserInstance;
 
-  const browser = await puppeteer.launch(puppeteerArgs);
+  if (!singleBrowserInstance) {
+    const puppeteerArgs = Object.assign(
+      {},
+      {
+        ignoreHTTPSErrors: true,
+        headless: !config.debugWindow
+      },
+      config.engineOptions
+    );
+
+    browser = await puppeteer.launch(puppeteerArgs);
+  }
+
   const page = await browser.newPage();
 
   await page.setViewport({ width: VP_W, height: VP_H });
@@ -283,13 +289,14 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
         scenarioLabelSafe,
         config,
         result.backstopSelectorsExp,
-        result.backstopSelectorsExpMap
+        result.backstopSelectorsExpMap,
+        singleBrowserInstance
       );
     } catch (e) {
       error = e;
     }
   } else {
-    await browser.close();
+    singleBrowserInstance ? page.close() : browser.close();
   }
 
   if (error) {
@@ -316,7 +323,8 @@ async function delegateSelectors (
   scenarioLabelSafe,
   config,
   selectors,
-  selectorMap
+  selectorMap,
+  singleBrowserInstance = false
 ) {
   let compareConfig = { testPairs: [] };
   let captureDocument = false;
@@ -375,11 +383,11 @@ async function delegateSelectors (
     };
     next();
   }).then(async () => {
-    console.log(chalk.green('x Close Browser'));
-    await browser.close();
+    console.log(chalk.green(`x ${singleBrowserInstance ? 'Close Page' : 'Close Browser'}`));
+    singleBrowserInstance ? await page.close() : await browser.close();
   }).catch(async (err) => {
     console.log(chalk.red(err));
-    await browser.close();
+    singleBrowserInstance ? await page.close() : await browser.close();
   }).then(_ => compareConfig);
 }
 

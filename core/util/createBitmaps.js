@@ -82,7 +82,9 @@ function saveViewportIndexes (viewport, index) {
   return Object.assign({}, viewport, { vIndex: index });
 }
 
-function delegateScenarios (config) {
+let browser;
+
+async function delegateScenarios (config) {
   var scenarios = [];
   var scenarioViews = [];
 
@@ -128,6 +130,20 @@ function delegateScenarios (config) {
   const asyncCaptureLimit = config.asyncCaptureLimit === 0 ? 1 : config.asyncCaptureLimit || CONCURRENCY_DEFAULT;
 
   if (config.engine.startsWith('puppet')) {
+    if (config.engineOptions.singleBrowserInstance) {
+      const puppeteer = require('puppeteer');
+      const puppeteerArgs = Object.assign(
+        {},
+        {
+          ignoreHTTPSErrors: true,
+          headless: !config.debugWindow
+        },
+        config.engineOptions
+      );
+    
+      browser = await puppeteer.launch(puppeteerArgs);
+      scenarioViews.forEach(scenario => scenario.browser = browser);
+    }
     return pMap(scenarioViews, runPuppet, { concurrency: asyncCaptureLimit });
   } else if (/chrom./i.test(config.engine)) {
     logger.error(`Chromy is no longer supported in version 5+. Please use version 4.x.x for chromy support.`);
@@ -170,9 +186,13 @@ function flatMapTestPairs (rawTestPairs) {
   }, []);
 }
 
-module.exports = function (config, isReference) {
-  const promise = delegateScenarios(decorateConfigForCapture(config, isReference))
+module.exports = async function (config, isReference) {
+  return delegateScenarios(decorateConfigForCapture(config, isReference))
     .then(rawTestPairs => {
+      if (browser) {
+        browser.close();
+      }
+
       const result = {
         compareConfig: {
           testPairs: flatMapTestPairs(rawTestPairs)
@@ -180,6 +200,4 @@ module.exports = function (config, isReference) {
       };
       return writeCompareConfigFile(config.tempCompareConfigFileName, result);
     });
-
-  return promise;
 };
