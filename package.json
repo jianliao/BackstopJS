@@ -1,6 +1,6 @@
 {
   "name": "backstopjs-spectrum",
-  "version": "5.0.14",
+  "version": "5.0.15",
   "description": "BackstopJS: Catch CSS curveballs.",
   "homepage": "https://github.com/garris/BackstopJS#readme",
   "bin": {
