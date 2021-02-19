@@ -124,7 +124,13 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
     if (isReference && scenario.referenceUrl) {
       url = scenario.referenceUrl;
     }
-    await page.goto(translateUrl(url));
+
+    // Full docs for Puppeteer waituntil: https://pptr.dev/#?product=Puppeteer&version=v2.1.1&show=api-pagewaitfornavigationoptions
+    // Page goto options
+    await page.goto(translateUrl(url), {
+      timeout: config.scenarioTimeOut || 1000,  // default is 1s
+      waitUntil: config.waitUntil || 'default' // default
+    });
 
     await injectBackstopTools(page);
 
