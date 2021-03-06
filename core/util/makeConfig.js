@@ -3,7 +3,7 @@ const extendConfig = require('./extendConfig');
 
 const NON_CONFIG_COMMANDS = ['init', 'version', 'stop'];
 
-function projectPath (config) {
+function projectPath () {
   return process.cwd();
 }
 
