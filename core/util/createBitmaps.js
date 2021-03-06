@@ -140,9 +140,9 @@ async function delegateScenarios (config) {
         },
         config.engineOptions
       );
-    
+
       browser = await puppeteer.launch(puppeteerArgs);
-      scenarioViews.forEach(scenario => scenario.browser = browser);
+      scenarioViews.forEach(scenario => { scenario.browser = browser; });
     }
     return pMap(scenarioViews, runPuppet, { concurrency: asyncCaptureLimit });
   } else if (/chrom./i.test(config.engine)) {
