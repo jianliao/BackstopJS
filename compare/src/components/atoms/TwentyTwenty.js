@@ -23,10 +23,6 @@ class TwentyTwenty extends React.Component {
     this.endDrag();
   }
 
-  componentWillReceiveProps ({ newPosition }) {
-    this.setState({ position: newPosition });
-  }
-
   onDragMove (e) {
     if (!this.props.isDraggingEnabled) return;
 

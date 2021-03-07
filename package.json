@@ -7,7 +7,7 @@
     "backstop": "./cli/index.js"
   },
   "scripts": {
-    "lint": "eslint 'compare/src/**/*.js' 'core/**/*.js' 'cli/**/*.js' 'capture/**/*.js' 'test/**/*.js' --ignore-pattern *.min.js",
+    "lint": "eslint 'compare/src/**/*.js' 'core/**/*.js' 'cli/**/*.js' 'capture/**/*.js' 'test/**/*.js' --ignore-pattern *.min.js --ignore-pattern pixel.js",
     "init": "node ./cli/index.js init",
     "reference": "node ./cli/index.js reference",
     "test": "node ./cli/index.js test",
