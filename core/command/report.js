@@ -7,7 +7,7 @@ const fs = require('../util/fs');
 const logger = require('../util/logger')('report');
 const compare = require('../util/compare/');
 
-async function writeReport(config, reporter) {
+async function writeReport (config, reporter) {
   const promises = [];
 
   if (config.report && config.report.indexOf('CI') > -1 && config.ciReport.format === 'junit') {
@@ -23,7 +23,7 @@ async function writeReport(config, reporter) {
   return allSettled(promises);
 }
 
-function writeBrowserReport(config, reporter) {
+function writeBrowserReport (config, reporter) {
   let testConfig;
   if (typeof config.args.config === 'object') {
     testConfig = config.args.config;
@@ -32,7 +32,7 @@ function writeBrowserReport(config, reporter) {
   }
 
   let browserReporter = cloneDeep(reporter);
-  function toAbsolute(p) {
+  function toAbsolute (p) {
     return (path.isAbsolute(p)) ? p : path.join(config.projectPath, p);
   }
   logger.log('Writing browser report');
@@ -99,7 +99,7 @@ function writeBrowserReport(config, reporter) {
   });
 }
 
-function writeJunitReport(config, reporter) {
+function writeJunitReport (config, reporter) {
   logger.log('Writing jUnit Report');
 
   const builder = require('junit-report-builder');
@@ -139,9 +139,9 @@ function writeJunitReport(config, reporter) {
   });
 }
 
-function writeJsonReport(config, reporter) {
+function writeJsonReport (config, reporter) {
   const jsonReporter = cloneDeep(reporter);
-  function toAbsolute(p) {
+  function toAbsolute (p) {
     return (path.isAbsolute(p)) ? p : path.join(config.projectPath, p);
   }
   logger.log('Writing json report');
@@ -183,7 +183,7 @@ module.exports = {
     logger.log(chalk[(failed ? 'red' : 'green')](+failed + ' Failed'));
 
     const results = await writeReport(config, report);
-    
+
     for (let i = 0; i < results.length; i++) {
       if (results[i].state !== 'fulfilled') {
         logger.error('Failed writing report with error: ' + results[i].value);
