@@ -1,5 +1,5 @@
 const path = require('path');
-const map = require('p-map');
+const pMap = require('p-map');
 const fs = require('fs');
 const cp = require('child_process');
 
@@ -9,7 +9,7 @@ const storeFailedDiffStub = require('./store-failed-diff-stub.js');
 
 const ASYNC_COMPARE_LIMIT = 20;
 
-function comparePair (pair, report, config, compareConfig) {
+function comparePair(pair, report, config, compareConfig) {
   const Test = report.addTest(pair);
 
   const referencePath = pair.reference ? path.resolve(config.projectPath, pair.reference) : '';
@@ -59,7 +59,7 @@ function comparePair (pair, report, config, compareConfig) {
   return compareImages(referencePath, testPath, pair, imageMagick, resembleOutputSettings, staticDiverged, Test);
 }
 
-function compareImages (referencePath, testPath, pair, imageMagick = false, resembleOutputSettings, staticDiverged = false, Test) {
+function compareImages(referencePath, testPath, pair, imageMagick = false, resembleOutputSettings, staticDiverged = false, Test) {
   return new Promise(function (resolve, reject) {
     const worker = cp.fork(require.resolve('./compare'));
     worker.send({
@@ -91,16 +91,13 @@ function compareImages (referencePath, testPath, pair, imageMagick = false, rese
   });
 }
 
-module.exports = function (config) {
+module.exports = async function (config) {
   const compareConfig = require(config.tempCompareConfigFileName).compareConfig;
 
   const report = new Reporter(config.ciReport.testSuiteName);
   const asyncCompareLimit = config.asyncCompareLimit || ASYNC_COMPARE_LIMIT;
   report.id = config.id;
 
-  return map(compareConfig.testPairs, pair => comparePair(pair, report, config, compareConfig), { concurrency: asyncCompareLimit })
-    .then(
-      () => report,
-      e => logger.error('The comparison failed with error: ' + e)
-    );
+  await pMap(compareConfig.testPairs, pair => comparePair(pair, report, config, compareConfig), { concurrency: asyncCompareLimit });
+  return report;
 };

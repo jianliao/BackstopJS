@@ -7,7 +7,7 @@ const fs = require('../util/fs');
 const logger = require('../util/logger')('report');
 const compare = require('../util/compare/');
 
-function writeReport (config, reporter) {
+async function writeReport(config, reporter) {
   const promises = [];
 
   if (config.report && config.report.indexOf('CI') > -1 && config.ciReport.format === 'junit') {
@@ -23,7 +23,7 @@ function writeReport (config, reporter) {
   return allSettled(promises);
 }
 
-function writeBrowserReport (config, reporter) {
+function writeBrowserReport(config, reporter) {
   let testConfig;
   if (typeof config.args.config === 'object') {
     testConfig = config.args.config;
@@ -32,7 +32,7 @@ function writeBrowserReport (config, reporter) {
   }
 
   let browserReporter = cloneDeep(reporter);
-  function toAbsolute (p) {
+  function toAbsolute(p) {
     return (path.isAbsolute(p)) ? p : path.join(config.projectPath, p);
   }
   logger.log('Writing browser report');
@@ -99,7 +99,7 @@ function writeBrowserReport (config, reporter) {
   });
 }
 
-function writeJunitReport (config, reporter) {
+function writeJunitReport(config, reporter) {
   logger.log('Writing jUnit Report');
 
   const builder = require('junit-report-builder');
@@ -139,9 +139,9 @@ function writeJunitReport (config, reporter) {
   });
 }
 
-function writeJsonReport (config, reporter) {
+function writeJsonReport(config, reporter) {
   const jsonReporter = cloneDeep(reporter);
-  function toAbsolute (p) {
+  function toAbsolute(p) {
     return (path.isAbsolute(p)) ? p : path.join(config.projectPath, p);
   }
   logger.log('Writing json report');
@@ -175,28 +175,25 @@ function writeJsonReport (config, reporter) {
 }
 
 module.exports = {
-  execute: function (config) {
-    return compare(config).then(function (report) {
-      const failed = report.failed();
-      logger.log('Test completed...');
-      logger.log(chalk.green(report.passed() + ' Passed'));
-      logger.log(chalk[(failed ? 'red' : 'green')](+failed + ' Failed'));
+  execute: async function (config) {
+    const report = await compare(config);
+    const failed = report.failed();
+    logger.log('Test completed...');
+    logger.log(chalk.green(report.passed() + ' Passed'));
+    logger.log(chalk[(failed ? 'red' : 'green')](+failed + ' Failed'));
 
-      return writeReport(config, report).then(function (results) {
-        for (let i = 0; i < results.length; i++) {
-          if (results[i].state !== 'fulfilled') {
-            logger.error('Failed writing report with error: ' + results[i].value);
-          }
-        }
+    const results = await writeReport(config, report);
+    
+    for (let i = 0; i < results.length; i++) {
+      if (results[i].state !== 'fulfilled') {
+        logger.error('Failed writing report with error: ' + results[i].value);
+      }
+    }
 
-        if (failed) {
-          logger.error('*** Mismatch errors found ***');
-          // logger.log('For a detailed report run `backstop openReport`\n');
-          throw new Error('Mismatch errors found.');
-        }
-      });
-    }, function (e) {
-      logger.error('Comparison failed with error:' + e);
-    });
+    if (failed) {
+      logger.error('*** Mismatch errors found ***');
+      // logger.log('For a detailed report run `backstop openReport`\n');
+      throw new Error('Mismatch errors found.');
+    }
   }
 };
