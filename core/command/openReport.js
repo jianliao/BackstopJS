@@ -1,4 +1,4 @@
-const open = require('opn');
+const open = require('open');
 const logger = require('../util/logger')('openReport');
 const path = require('path');
 const http = require('http');

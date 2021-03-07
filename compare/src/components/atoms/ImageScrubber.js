@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import TwentyTwenty from 'backstop-twentytwenty';
+import TwentyTwenty from './TwentyTwenty';
 import { colors, fonts, shadows } from '../../styles';
 
 const ScrubberViewBtn = styled.button`
@@ -165,7 +165,7 @@ export default class ImageScrubber extends React.Component {
         'message',
         function (result) {
           const divergedImgData = result.data;
-          let clampedImgData = getEmptyImgData(h, w);
+          const clampedImgData = getEmptyImgData(h, w);
           for (let i = divergedImgData.length - 1; i >= 0; i--) {
             clampedImgData.data[i] = divergedImgData[i];
           }
@@ -301,10 +301,12 @@ export default class ImageScrubber extends React.Component {
           >
             <TwentyTwenty
               verticalAlign="top"
+              leftHorizontalAlign="center"
+              rightHorizontalAlign="center"
               minDistanceToBeginInteraction={0}
               maxAngleToBeginInteraction={Infinity}
               initialPosition={position}
-              newPosition={position}
+              isDraggingEnabled={true}
             >
               <img
                 id="scrubberRefImage"
@@ -335,7 +337,7 @@ function getImgDataDataFromContext (context) {
 }
 
 function getEmptyImgData (h, w) {
-  var o = imageToCanvasContext(null, h, w);
+  const o = imageToCanvasContext(null, h, w);
   return o.createImageData(w, h);
 }
 

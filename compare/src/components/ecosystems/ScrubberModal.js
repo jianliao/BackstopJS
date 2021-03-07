@@ -63,6 +63,8 @@ const customStyles = {
   }
 };
 
+Modal.setAppElement('#root');
+
 class ScrubberModal extends React.Component {
   render () {
     const {
@@ -92,7 +94,6 @@ class ScrubberModal extends React.Component {
       <Wrapper>
         <Modal
           isOpen={visible}
-          /* onAfterOpen={this.afterOpenModal} */
           onRequestClose={closeModal}
           style={customStyles}
           contentLabel="Example Modal"

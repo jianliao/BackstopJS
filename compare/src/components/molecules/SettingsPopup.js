@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { updateSettings, toggleAllImages, toggleTextInfo } from '../../actions';
+import { updateSettings, toggleAllImages } from '../../actions';
 
 import { colors, shadows } from '../../styles';
 
@@ -65,7 +65,7 @@ class SettingsPopup extends React.Component {
   }
 
   render () {
-    let { settings } = this.props;
+    const { settings } = this.props;
 
     return (
       <PopupWrapper>
@@ -117,9 +117,6 @@ const mapDispatchToProps = dispatch => {
     },
     toggleAll: value => {
       dispatch(toggleAllImages(value));
-    },
-    toogleTextInfo: value => {
-      dispatch(toggleTextInfo(value));
     }
   };
 };

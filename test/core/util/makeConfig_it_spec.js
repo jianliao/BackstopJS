@@ -38,7 +38,9 @@ const expectedConfig = {
   defaultMisMatchThreshold: 0.1,
   debug: false,
   resembleOutputOptions: undefined,
-  dockerCommandTemplate: undefined
+  dockerCommandTemplate: undefined,
+  imageMagick: undefined,
+  staticDiverged: undefined
 };
 
 describe('make config it', function () {
