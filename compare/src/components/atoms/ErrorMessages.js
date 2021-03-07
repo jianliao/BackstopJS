@@ -32,9 +32,9 @@ class ErrorMessages extends React.Component {
     const display = !!engineError || !!backstopError;
 
     return (
-      <DetailsPanel display={display}>
-        <ErrorMsg display={engineError}>ENGINE ERROR: {engineError}</ErrorMsg>
-        <ErrorMsg display={backstopError}>
+      <DetailsPanel display={display ? 1 : 0}>
+        <ErrorMsg display={engineError ? 1 : 0}>ENGINE ERROR: {engineError}</ErrorMsg>
+        <ErrorMsg display={backstopError ? 1 : 0}>
           BACKSTOP ERROR: {backstopError}
         </ErrorMsg>
       </DetailsPanel>
