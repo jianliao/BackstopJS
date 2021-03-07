@@ -1,10 +1,10 @@
 {
   "name": "backstopjs-spectrum",
-  "version": "5.0.15",
+  "version": "5.1.0",
   "description": "BackstopJS: Catch CSS curveballs.",
   "homepage": "https://github.com/garris/BackstopJS#readme",
   "bin": {
-    "backstop": "./cli/index.js"
+    "backstop": "cli/index.js"
   },
   "scripts": {
     "lint": "eslint 'compare/src/**/*.js' 'core/**/*.js' 'cli/**/*.js' 'capture/**/*.js' 'test/**/*.js' --ignore-pattern *.min.js --ignore-pattern pixel.js",
