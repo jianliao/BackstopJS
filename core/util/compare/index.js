@@ -91,13 +91,16 @@ function compareImages (referencePath, testPath, pair, imageMagick = false, rese
   });
 }
 
-module.exports = async function (config) {
+module.exports = function (config) {
   const compareConfig = require(config.tempCompareConfigFileName).compareConfig;
 
   const report = new Reporter(config.ciReport.testSuiteName);
   const asyncCompareLimit = config.asyncCompareLimit || ASYNC_COMPARE_LIMIT;
   report.id = config.id;
 
-  await pMap(compareConfig.testPairs, pair => comparePair(pair, report, config, compareConfig), { concurrency: asyncCompareLimit });
-  return report;
+  return pMap(compareConfig.testPairs, pair => comparePair(pair, report, config, compareConfig), { concurrency: asyncCompareLimit })
+    .then(
+      () => report,
+      e => logger.error('The comparison failed with error: ' + e)
+    );
 };

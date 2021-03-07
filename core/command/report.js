@@ -7,7 +7,7 @@ const fs = require('../util/fs');
 const logger = require('../util/logger')('report');
 const compare = require('../util/compare/');
 
-async function writeReport (config, reporter) {
+function writeReport (config, reporter) {
   const promises = [];
 
   if (config.report && config.report.indexOf('CI') > -1 && config.ciReport.format === 'junit') {
@@ -175,25 +175,27 @@ function writeJsonReport (config, reporter) {
 }
 
 module.exports = {
-  execute: async function (config) {
-    const report = await compare(config);
-    const failed = report.failed();
-    logger.log('Test completed...');
-    logger.log(chalk.green(report.passed() + ' Passed'));
-    logger.log(chalk[(failed ? 'red' : 'green')](+failed + ' Failed'));
+  execute: function (config) {
+    return compare(config).then(function (report) {
+      const failed = report.failed();
+      logger.log('Test completed...');
+      logger.log(chalk.green(report.passed() + ' Passed'));
+      logger.log(chalk[(failed ? 'red' : 'green')](+failed + ' Failed'));
 
-    const results = await writeReport(config, report);
-
-    for (let i = 0; i < results.length; i++) {
-      if (results[i].state !== 'fulfilled') {
-        logger.error('Failed writing report with error: ' + results[i].value);
-      }
-    }
-
-    if (failed) {
-      logger.error('*** Mismatch errors found ***');
-      // logger.log('For a detailed report run `backstop openReport`\n');
-      throw new Error('Mismatch errors found.');
-    }
+      return writeReport(config, report).then(function (results) {
+        for (let i = 0; i < results.length; i++) {
+          if (results[i].state !== 'fulfilled') {
+            logger.error('Failed writing report with error: ' + results[i].value);
+          }
+        }
+        if (failed) {
+          logger.error('*** Mismatch errors found ***');
+          // logger.log('For a detailed report run `backstop openReport`\n');
+          throw new Error('Mismatch errors found.');
+        }
+      });
+    }, function (e) {
+      logger.error('Comparison failed with error:' + e);
+    });
   }
 };
