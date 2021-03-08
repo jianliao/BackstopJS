@@ -60,7 +60,7 @@ function comparePair (pair, report, config, compareConfig) {
 }
 
 function compareImages (referencePath, testPath, pair, imageMagick = false, resembleOutputSettings, staticDiverged = false, Test) {
-  return new Promise(function (resolve, reject) {
+  return new Promise(resolve => {
     const worker = cp.fork(require.resolve('./compare'));
     worker.send({
       referencePath,
@@ -71,8 +71,7 @@ function compareImages (referencePath, testPath, pair, imageMagick = false, rese
       staticDiverged
     });
 
-    worker.on('message', function (data) {
-      worker.kill();
+    worker.on('message', data => {
       Test.status = data.status;
       pair.diff = data.diff;
 
@@ -99,8 +98,5 @@ module.exports = function (config) {
   report.id = config.id;
 
   return pMap(compareConfig.testPairs, pair => comparePair(pair, report, config, compareConfig), { concurrency: asyncCompareLimit })
-    .then(
-      () => report,
-      e => logger.error('The comparison failed with error: ' + e)
-    );
+    .then(() => report, e => logger.error('The comparison failed with error: ' + e));
 };
