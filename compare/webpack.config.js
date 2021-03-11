@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
+  devtool: 'source-map',
   entry: './compare/src/index.js',
   output: {
     path: path.resolve(__dirname, 'output'),

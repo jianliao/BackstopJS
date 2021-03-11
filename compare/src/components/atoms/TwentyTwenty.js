@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 const DEGREES_IN_RADIAN = 180 / Math.PI;
@@ -21,6 +20,10 @@ class TwentyTwenty extends React.Component {
 
   componentWillUnmount () {
     this.endDrag();
+  }
+
+  UNSAFE_componentWillReceiveProps ({ newPosition }) {
+    this.setState({ position: newPosition });
   }
 
   onDragMove (e) {

@@ -306,6 +306,7 @@ export default class ImageScrubber extends React.Component {
               minDistanceToBeginInteraction={0}
               maxAngleToBeginInteraction={Infinity}
               initialPosition={position}
+              newPosition={position}
               isDraggingEnabled={true}
             >
               <img
