@@ -95,6 +95,16 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
     }
   });
 
+  if (config.blockGIF) {
+    await page.setRequestInterception(true);
+    page.on('request', interceptedRequest => {
+      if (interceptedRequest.url().endsWith('.gif'))
+        interceptedRequest.abort();
+      else
+        interceptedRequest.continue();
+    });
+  }
+
   const chromeVersion = await page.evaluate(_ => {
     const v = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
     return v ? parseInt(v[2], 10) : 0;
