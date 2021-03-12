@@ -98,10 +98,7 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
   if (config.blockGIF) {
     await page.setRequestInterception(true);
     page.on('request', interceptedRequest => {
-      if (interceptedRequest.url().endsWith('.gif'))
-        interceptedRequest.abort();
-      else
-        interceptedRequest.continue();
+      interceptedRequest.url().endsWith('.gif') ? interceptedRequest.abort() : interceptedRequest.continue();
     });
   }
 
