@@ -1,0 +1,15 @@
+test/
+examples/
+old_splash_page_v2.0/
+compare/src/
+assets/
+backstop_data/
+CONTRIBUTING.md
+.editorconfig
+.eslintignore
+.eslintrc
+.nvmrc
+.travis.yml
+babel.config.json
+compare/README.md
+compare/webpack.config.js
