@@ -79,7 +79,6 @@ function approve () {
   backstop('approve', exampleConfig);
 }
 
-// eslint-disable-next-line no-unused-vars
 function open () {
   backstop('openReport', exampleConfig);
 }
@@ -95,8 +94,14 @@ function main () {
   );
 }
 
-if (argsOptions.command === 'approve') {
-  approve();
-} else {
-  main();
+switch (argsOptions.command) {
+  case 'approve':
+    approve();
+    break;
+  case 'open':
+  case 'openReport':
+    open();
+    break;
+  default:
+    main();
 }
