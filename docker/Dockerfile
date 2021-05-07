@@ -25,13 +25,13 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
 RUN yarn global add backstopjs-spectrum@${BACKSTOPJS_VERSION}
 
 # Add user so we don't need --no-sandbox.
-RUN addgroup -S pptruser && adduser -S -g pptruser pptruser \
-    && mkdir -p /home/pptruser/Downloads /app \
-    && chown -R pptruser:pptruser /home/pptruser \
-    && chown -R pptruser:pptruser /app
+RUN addgroup -S jenkins && adduser -S -g jenkins jenkins \
+    && mkdir -p /home/jenkins/Downloads /app \
+    && chown -R jenkins:jenkins /home/jenkins \
+    && chown -R jenkins:jenkins /app
 
 # Run everything after as non-privileged user.
-USER pptruser
+USER jenkins
 
 WORKDIR /src
 
