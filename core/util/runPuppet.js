@@ -132,8 +132,10 @@ async function processScenarioView (scenario, variantOrScenarioLabelSafe, scenar
 
     // Full docs for Puppeteer waituntil: https://pptr.dev/#?product=Puppeteer&version=v2.1.1&show=api-pagewaitfornavigationoptions
     // Page goto options
+    const { timeout, waitUntil } = config;
     await page.goto(translateUrl(url), {
-      waitUntil: config.waitUntil
+      timeout,
+      waitUntil
     });
 
     await injectBackstopTools(page);
